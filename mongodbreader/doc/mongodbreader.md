@@ -8,119 +8,74 @@ MongoDBReader 插件利用 MongoDB 的java客户端MongoClient进行MongoDB的�
 MongoDBReader通过Datax框架从MongoDB并行的读取数据，通过主控的JOB程序按照指定的规则对MongoDB中的数据进行分片，并行读取，然后将MongoDB支持的类型通过逐一判断转换成Datax支持的类型。
 
 #### 3 功能说明
-* 该示例从MongoDB读一份数据到ODPS。
+* 该示例从MongoDB读一份数据到text。
 
-	    {
-	    "job": {
-	        "setting": {
-	            "speed": {
-	                "channel": 2
-	            }
-	        },
-	        "content": [
-	            {
-	                "reader": {
-	                    "name": "mongodbreader",
-	                    "parameter": {
-	                        "address": ["127.0.0.1:27017"],
-	                        "userName": "",
-	                        "userPassword": "",
-	                        "dbName": "tag_per_data",
-	                        "collectionName": "tag_data12",
-	                        "column": [
-	                            {
-	                                "name": "unique_id",
-	                                "type": "string"
-	                            },
-	                            {
-	                                "name": "sid",
-	                                "type": "string"
-	                            },
-	                            {
-	                                "name": "user_id",
-	                                "type": "string"
-	                            },
-	                            {
-	                                "name": "auction_id",
-	                                "type": "string"
-	                            },
-	                            {
-	                                "name": "content_type",
-	                                "type": "string"
-	                            },
-	                            {
-	                                "name": "pool_type",
-	                                "type": "string"
-	                            },
-	                            {
-	                                "name": "frontcat_id",
-	                                "type": "Array",
-	                                "spliter": ""
-	                            },
-	                            {
-	                                "name": "categoryid",
-	                                "type": "Array",
-	                                "spliter": ""
-	                            },
-	                            {
-	                                "name": "gmt_create",
-	                                "type": "string"
-	                            },
-	                            {
-	                                "name": "taglist",
-	                                "type": "Array",
-	                                "spliter": " "
-	                            },
-	                            {
-	                                "name": "property",
-	                                "type": "string"
-	                            },
-	                            {
-	                                "name": "scorea",
-	                                "type": "int"
-	                            },
-	                            {
-	                                "name": "scoreb",
-	                                "type": "int"
-	                            },
-	                            {
-	                                "name": "scorec",
-	                                "type": "int"
-	                            }
-	                        ]
-	                    }
-	                },
-	                "writer": {
-	                    "name": "odpswriter",
-	                    "parameter": {
-	                        "project": "tb_ai_recommendation",
-	                        "table": "jianying_tag_datax_read_test01",
-	                        "column": [
-	                            "unique_id",
-	                            "sid",
-	                            "user_id",
-	                            "auction_id",
-	                            "content_type",
-	                            "pool_type",
-	                            "frontcat_id",
-	                            "categoryid",
-	                            "gmt_create",
-	                            "taglist",
-	                            "property",
-	                            "scorea",
-	                            "scoreb"
-	                        ],
-	                        "accessId": "**************",
-	                        "accessKey": "********************",
-	                        "truncate": true,
-	                        "odpsServer": "xxx/api",
-	                        "tunnelServer": "xxx",
-	                        "accountType": "aliyun"
-	                    }
-	                }
-	            }
-	        ]
-	    }
+        {
+            "job": {
+                "setting": {
+                    "speed": {
+                        "channel": 1
+                    }
+                },
+                "content": [
+                    {
+                        "reader": {
+                            "name": "mongodbreader",
+                            "parameter": {
+                                "address": [
+                                    "10.24.69.9:27017"
+                                ],
+                                "userName": "admin",
+                                "userPassword": "123456",
+                                "authDb": "admin",
+                                "dbName": "cheney",
+                                "encryptField":[
+                                    "title",
+                                    "description.name.age.gender.xy"
+                                ],
+                                "collectionName": "cheney",
+                                "column": [
+                                    {
+                                        "name": "title",
+                                        "type": "string"
+                                    },
+                                    {
+                                        "name": "description",
+                                        "type": "string"
+                                    },
+                                    {
+                                        "name": "by",
+                                        "type": "string"
+                                    },
+                                    {
+                                        "name": "url",
+                                        "type": "string"
+                                    },
+                                    {
+                                        "name": "tags",
+                                        "type": "Array",
+                                        "spliter": ""
+                                    },
+                                    {
+                                        "name": "likes",
+                                        "type": "int"
+                                    }
+                                ]
+                            }
+                        },
+                        "writer": {
+                            "name": "txtfilewriter",
+                            "parameter": {
+                                "path": "/opt/datax/path",
+                                "fileName": "cheney",
+                                "writeMode": "truncate",
+                                "dateFormat": "yyyy-MM-dd",
+                                "fileFormat": "csv"
+                            }
+                        }
+                    }
+                ]
+            }
         }
 #### 4 参数说明
 
@@ -128,6 +83,7 @@ MongoDBReader通过Datax框架从MongoDB并行的读取数据，通过主控的J
 * userName：MongoDB的用户名。【选填】
 * userPassword： MongoDB的密码。【选填】
 * authDb: MongoDB认证数据库【选填】
+* encryptField: 需要加密写入的字段【必填】
 * collectionName： MonogoDB的集合名。【必填】
 * column：MongoDB的文档列名。【必填】
 * name：Column的名字。【必填】
@@ -149,3 +105,8 @@ MongoDBReader通过Datax框架从MongoDB并行的读取数据，通过主控的J
 
 #### 6 性能报告
 #### 7 测试报告
+#### 8 开发
+* 在对应的reader或writer修改逻辑
+* 打包命令：mvn clean package -DskipTests assembly:assembly
+* 替换datax根目录下/plugin/rereader/mongodbreader/下的jar包重新运行任务即可
+
