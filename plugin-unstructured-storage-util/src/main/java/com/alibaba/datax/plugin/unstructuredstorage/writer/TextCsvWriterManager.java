@@ -13,7 +13,7 @@ import com.csvreader.CsvWriter;
 
 public class TextCsvWriterManager {
     public static UnstructuredWriter produceUnstructuredWriter(
-            String fileFormat, char fieldDelimiter, Writer writer) {
+            String fileFormat, String fieldDelimiter, Writer writer) {
         // warn: false means plain text(old way), true means strict csv format
         if (Constant.FILE_FORMAT_TEXT.equals(fileFormat)) {
             return new TextWriterImpl(writer, fieldDelimiter);
@@ -27,12 +27,12 @@ class CsvWriterImpl implements UnstructuredWriter {
     private static final Logger LOG = LoggerFactory
             .getLogger(CsvWriterImpl.class);
     // csv 严格符合csv语法, 有标准的转义等处理
-    private char fieldDelimiter;
+    private String fieldDelimiter;
     private CsvWriter csvWriter;
 
-    public CsvWriterImpl(Writer writer, char fieldDelimiter) {
+    public CsvWriterImpl(Writer writer, String fieldDelimiter) {
         this.fieldDelimiter = fieldDelimiter;
-        this.csvWriter = new CsvWriter(writer, this.fieldDelimiter);
+//        this.csvWriter = new CsvWriter(writer, this.fieldDelimiter);
         this.csvWriter.setTextQualifier('"');
         this.csvWriter.setUseTextQualifier(true);
         // warn: in linux is \n , in windows is \r\n
@@ -64,10 +64,10 @@ class TextWriterImpl implements UnstructuredWriter {
     private static final Logger LOG = LoggerFactory
             .getLogger(TextWriterImpl.class);
     // text StringUtils的join方式, 简单的字符串拼接
-    private char fieldDelimiter;
+    private String fieldDelimiter;
     private Writer textWriter;
 
-    public TextWriterImpl(Writer writer, char fieldDelimiter) {
+    public TextWriterImpl(Writer writer, String fieldDelimiter) {
         this.fieldDelimiter = fieldDelimiter;
         this.textWriter = writer;
     }
@@ -77,6 +77,7 @@ class TextWriterImpl implements UnstructuredWriter {
         if (splitedRows.isEmpty()) {
             LOG.info("Found one record line which is empty.");
         }
+        LOG.info("FieldDelimiter >> {}", this.fieldDelimiter);
         this.textWriter.write(String.format("%s%s",
                 StringUtils.join(splitedRows, this.fieldDelimiter),
                 IOUtils.LINE_SEPARATOR));

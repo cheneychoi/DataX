@@ -29,6 +29,7 @@ MongoDBReader通过Datax框架从MongoDB并行的读取数据，通过主控的J
                                 "userPassword": "123456",
                                 "authDb": "admin",
                                 "dbName": "cheney",
+                                "aesKey": "bzdIOHVJTTJPNXF2NjVsMg==",
                                 "encryptField":[
                                     "title",
                                     "description.name.age.gender.xy"
@@ -70,20 +71,22 @@ MongoDBReader通过Datax框架从MongoDB并行的读取数据，通过主控的J
                                 "fileName": "cheney",
                                 "writeMode": "truncate",
                                 "dateFormat": "yyyy-MM-dd",
-                                "fileFormat": "csv"
-                            }
-                        }
-                    }
-                ]
-            }
-        }
+                                "fileFormat": "csv",
+                                "fieldDelimiter": ","
+                              }
+                          }
+                      }
+                  ]
+              }
+          }
 #### 4 参数说明
 
 * address： MongoDB的数据地址信息，因为MonogDB可能是个集群，则ip端口信息需要以Json数组的形式给出。【必填】
 * userName：MongoDB的用户名。【选填】
 * userPassword： MongoDB的密码。【选填】
 * authDb: MongoDB认证数据库【选填】
-* encryptField: 需要加密写入的字段【必填】
+* aesKey: base64加密后的aeskey
+* encryptField: 需要加密写入的字段【必填】如果需要加密json中的某个属性值以'.'的方式书写
 * collectionName： MonogoDB的集合名。【必填】
 * column：MongoDB的文档列名。【必填】
 * name：Column的名字。【必填】

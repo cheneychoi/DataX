@@ -113,7 +113,7 @@ public final class ReaderSplitUtil {
 
     public static Configuration doPreCheckSplit(Configuration originalSliceConfig) {
         Configuration queryConfig = originalSliceConfig.clone();
-        boolean isTableMode = originalSliceConfig.getBool(Constant.IS_TABLE_MODE).booleanValue();
+        boolean isTableMode = originalSliceConfig.getBool(z).booleanValue();
 
         String splitPK = originalSliceConfig.getString(Key.SPLIT_PK);
         String column = originalSliceConfig.getString(Key.COLUMN);

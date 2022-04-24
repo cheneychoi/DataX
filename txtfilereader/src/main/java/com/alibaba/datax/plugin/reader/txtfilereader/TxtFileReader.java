@@ -175,12 +175,12 @@ public class TxtFileReader extends Reader {
 			String delimiterInStr = this.originConfig
 					.getString(com.alibaba.datax.plugin.unstructuredstorage.reader.Key.FIELD_DELIMITER);
 			// warn: if have, length must be one
-			if (null != delimiterInStr && 1 != delimiterInStr.length()) {
-				throw DataXException.asDataXException(
-						UnstructuredStorageReaderErrorCode.ILLEGAL_VALUE,
-						String.format("仅仅支持单字符切分, 您配置的切分为 : [%s]",
-								delimiterInStr));
-			}
+//			if (null != delimiterInStr && 1 != delimiterInStr.length()) {
+//				throw DataXException.asDataXException(
+//						UnstructuredStorageReaderErrorCode.ILLEGAL_VALUE,
+//						String.format("仅仅支持单字符切分, 您配置的切分为 : [%s]",
+//								delimiterInStr));
+//			}
 
 		}
 

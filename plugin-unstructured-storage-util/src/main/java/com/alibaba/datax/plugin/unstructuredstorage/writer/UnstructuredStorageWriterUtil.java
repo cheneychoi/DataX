@@ -41,7 +41,7 @@ public class UnstructuredStorageWriterUtil {
 
     /**
      * check parameter: writeMode, encoding, compress, filedDelimiter
-     * */
+     */
     public static void validateParameter(Configuration writerConfiguration) {
         // writeMode check
         String writeMode = writerConfiguration.getNecessaryValue(
@@ -99,11 +99,11 @@ public class UnstructuredStorageWriterUtil {
         String delimiterInStr = writerConfiguration
                 .getString(Key.FIELD_DELIMITER);
         // warn: if have, length must be one
-        if (null != delimiterInStr && 1 != delimiterInStr.length()) {
-            throw DataXException.asDataXException(
-                    UnstructuredStorageWriterErrorCode.ILLEGAL_VALUE,
-                    String.format("仅仅支持单字符切分, 您配置的切分为 : [%s]", delimiterInStr));
-        }
+//        if (null != delimiterInStr && 1 != delimiterInStr.length()) {
+//            throw DataXException.asDataXException(
+//                    UnstructuredStorageWriterErrorCode.ILLEGAL_VALUE,
+//                    String.format("仅仅支持单字符切分, 您配置的切分为 : [%s]", delimiterInStr));
+//        }
         if (null == delimiterInStr) {
             LOG.warn(String.format("您没有配置列分隔符, 使用默认值[%s]",
                     Constant.DEFAULT_FIELD_DELIMITER));
@@ -124,7 +124,7 @@ public class UnstructuredStorageWriterUtil {
     }
 
     public static List<Configuration> split(Configuration writerSliceConfig,
-            Set<String> originAllFileExists, int mandatoryNumber) {
+                                            Set<String> originAllFileExists, int mandatoryNumber) {
         LOG.info("begin do split...");
         Set<String> allFileExists = new HashSet<String>();
         allFileExists.addAll(originAllFileExists);
@@ -153,19 +153,19 @@ public class UnstructuredStorageWriterUtil {
     }
 
     public static String buildFilePath(String path, String fileName,
-            String suffix) {
+                                       String suffix) {
         boolean isEndWithSeparator = false;
         switch (IOUtils.DIR_SEPARATOR) {
-        case IOUtils.DIR_SEPARATOR_UNIX:
-            isEndWithSeparator = path.endsWith(String
-                    .valueOf(IOUtils.DIR_SEPARATOR));
-            break;
-        case IOUtils.DIR_SEPARATOR_WINDOWS:
-            isEndWithSeparator = path.endsWith(String
-                    .valueOf(IOUtils.DIR_SEPARATOR_WINDOWS));
-            break;
-        default:
-            break;
+            case IOUtils.DIR_SEPARATOR_UNIX:
+                isEndWithSeparator = path.endsWith(String
+                        .valueOf(IOUtils.DIR_SEPARATOR));
+                break;
+            case IOUtils.DIR_SEPARATOR_WINDOWS:
+                isEndWithSeparator = path.endsWith(String
+                        .valueOf(IOUtils.DIR_SEPARATOR_WINDOWS));
+                break;
+            default:
+                break;
         }
         if (!isEndWithSeparator) {
             path = path + IOUtils.DIR_SEPARATOR;
@@ -179,8 +179,8 @@ public class UnstructuredStorageWriterUtil {
     }
 
     public static void writeToStream(RecordReceiver lineReceiver,
-            OutputStream outputStream, Configuration config, String context,
-            TaskPluginCollector taskPluginCollector) {
+                                     OutputStream outputStream, Configuration config, String context,
+                                     TaskPluginCollector taskPluginCollector) {
         String encoding = config.getString(Key.ENCODING,
                 Constant.DEFAULT_ENCODING);
         // handle blank encoding
@@ -239,8 +239,8 @@ public class UnstructuredStorageWriterUtil {
     }
 
     private static void doWriteToStream(RecordReceiver lineReceiver,
-            BufferedWriter writer, String contex, Configuration config,
-            TaskPluginCollector taskPluginCollector) throws IOException {
+                                        BufferedWriter writer, String contex, Configuration config,
+                                        TaskPluginCollector taskPluginCollector) throws IOException {
 
         String nullFormat = config.getString(Key.NULL_FORMAT);
 
@@ -256,19 +256,20 @@ public class UnstructuredStorageWriterUtil {
                 Constant.FILE_FORMAT_TEXT);
 
         String delimiterInStr = config.getString(Key.FIELD_DELIMITER);
-        if (null != delimiterInStr && 1 != delimiterInStr.length()) {
-            throw DataXException.asDataXException(
-                    UnstructuredStorageWriterErrorCode.ILLEGAL_VALUE,
-                    String.format("仅仅支持单字符切分, 您配置的切分为 : [%s]", delimiterInStr));
-        }
+//        if (null != delimiterInStr && 1 != delimiterInStr.length()) {
+//            throw DataXException.asDataXException(
+//                    UnstructuredStorageWriterErrorCode.ILLEGAL_VALUE,
+//                    String.format("仅仅支持单字符切分, 您配置的切分为 : [%s]", delimiterInStr));
+//        }
         if (null == delimiterInStr) {
             LOG.warn(String.format("您没有配置列分隔符, 使用默认值[%s]",
                     Constant.DEFAULT_FIELD_DELIMITER));
         }
 
         // warn: fieldDelimiter could not be '' for no fieldDelimiter
-        char fieldDelimiter = config.getChar(Key.FIELD_DELIMITER,
-                Constant.DEFAULT_FIELD_DELIMITER);
+        String fieldDelimiter = config.getString(Key.FIELD_DELIMITER,
+                ",");
+        LOG.info("fieldDelimiter >> {}", fieldDelimiter);
 
         UnstructuredWriter unstructuredWriter = TextCsvWriterManager
                 .produceUnstructuredWriter(fileFormat, fieldDelimiter, writer);
@@ -291,10 +292,10 @@ public class UnstructuredStorageWriterUtil {
 
     /**
      * 异常表示脏数据
-     * */
+     */
     public static void transportOneRecord(Record record, String nullFormat,
-            DateFormat dateParse, TaskPluginCollector taskPluginCollector,
-            UnstructuredWriter unstructuredWriter) {
+                                          DateFormat dateParse, TaskPluginCollector taskPluginCollector,
+                                          UnstructuredWriter unstructuredWriter) {
         // warn: default is null
         if (null == nullFormat) {
             nullFormat = "null";

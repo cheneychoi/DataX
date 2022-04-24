@@ -15,19 +15,18 @@ public class AESUtil {
     /**
      * length == 16
      */
-    public static final String AES_KEY = "bzdIOHVJTTJPNXF2NjVsMg==";
+//    public static final String AES_KEY = "bzdIOHVJTTJPNXF2NjVsMg==";
 
     public static final String salt = "!@#$%^&*";
 
     public static void main(String[] args) {
-        String encrypt = encryptString("123213214312");
+        String encrypt = encryptString("123213214312","bzdIOHVJTTJPNXF2NjVsMg==");
         System.out.println(encrypt);
-        String decrypt = decryptString(encrypt);
+        String decrypt = decryptString(encrypt,"bzdIOHVJTTJPNXF2NjVsMg==");
         System.out.println(decrypt);
     }
 
-    public static String encryptString(String ciphertext)
-    {
+    public static String encryptString(String ciphertext, String AES_KEY) {
         byte[] keyBytes = Base64.getDecoder().decode(AES_KEY);
         if (keyBytes.length != 16) {
             throw new RuntimeException("Invalid key length");
@@ -48,8 +47,7 @@ public class AESUtil {
         return plaintext;
     }
 
-    public static String decryptString(String ciphertext)
-    {
+    public static String decryptString(String ciphertext, String AES_KEY) {
         byte[] keyBytes = Base64.getDecoder().decode(AES_KEY);
         if (keyBytes.length != 16) {
             throw new RuntimeException("Invalid key length");
